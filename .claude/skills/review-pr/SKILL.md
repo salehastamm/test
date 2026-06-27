@@ -45,13 +45,18 @@ Label each finding:
    gh pr diff <number>
    ```
 2. Read the diff and assess it against all four dimensions above.
-3. Post findings as **inline comments** on the relevant lines, each prefixed
-   with its severity, e.g. `**blocker:** ...`. Use:
-   ```bash
-   gh pr review <number> --comment   # while adding line comments
-   ```
-   (Add line-level comments via the GitHub API / review comments where inline
-   placement is needed.)
+3. Deliver the findings. Note that `gh pr review --comment` only submits a
+   review **body** — it cannot attach line-level comments. So:
+   - **Default:** put all findings in the summary review body, grouped by
+     severity, each citing its file and line and prefixed with its severity
+     (e.g. `**blocker:** path:line — ...`). This is always achievable.
+   - **True inline comments (optional):** post them via the REST API before
+     submitting the review, e.g.
+     ```bash
+     gh api repos/{owner}/{repo}/pulls/<number>/comments \
+       -f body='**blocker:** ...' -f commit_id='<head-sha>' \
+       -f path='<file>' -F line=<n> -f side='RIGHT'
+     ```
 4. Submit a **summary review** that lists the findings grouped by severity and
    states the overall verdict.
 
@@ -67,6 +72,11 @@ Conclude with an explicit verdict based on the findings:
   ```bash
   gh pr review <number> --approve --body "<summary>"
   ```
+
+**Self-authored PRs:** GitHub rejects `--approve` and `--request-changes` on a
+PR you opened ("Can not approve your own pull request"). When the reviewer is
+the PR author, submit the review with `--comment` instead and state the verdict
+explicitly at the top of the body (e.g. "**Verdict: Approve** (no blockers)").
 
 ## Rules
 

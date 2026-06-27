@@ -13,6 +13,10 @@ the `gh` CLI against the `origin` remote. Do not invent ad-hoc formats.
 PRs target **`main`** by default. Only use a different base if the user
 explicitly asks for one.
 
+`dev` is the project's integration branch, so a **`dev` → `main`** PR is a
+sanctioned release/integration merge — allow it. The only head branch that is
+never valid is `main` itself.
+
 ## Title standard
 
 Derive the title from the current **branch name**, which follows the
@@ -54,9 +58,9 @@ Before opening the PR:
    ```bash
    git push -u origin HEAD
    ```
-2. Never open a PR from `main` (or `dev`) into `main`. The head branch must be a
-   topic branch. If the user is on `main`, stop and ask them to branch first
-   (see [create-branch]).
+2. The head branch must not be `main`. A topic branch (`feature/…`, `fix/…`,
+   etc.) or the `dev` integration branch is fine. If the user is on `main`, stop
+   and ask them to branch first (see [create-branch]).
 3. Draft the **title** from the branch name and the **body** from the template,
    filling the Summary and Changes from the actual commits/diff on the branch.
 4. Show the user the proposed title and body for confirmation.
